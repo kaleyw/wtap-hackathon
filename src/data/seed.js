@@ -185,7 +185,7 @@ export const PROGRAM_WRAPPED = {
   ],
 }
 
-// ---- My Work: sample tasks from project tools (demo data; real version uses each tool's API with company sign-in) ----
+// ---- Journal: sample tasks from project tools (demo data; real version uses each tool's API with company sign-in) ----
 export const WORK_SOURCES = [
   { id: 'jira', name: 'Jira', detail: 'EVAL board · Applied ML', connected: true },
   { id: 'github', name: 'GitHub Projects', detail: 'rbc-ai/feature-store', connected: true },

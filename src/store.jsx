@@ -104,6 +104,8 @@ function reducer(state, a) {
       return { ...state, workTasks: state.workTasks.map((t) => (t.id === a.id ? { ...t, status: a.status, days: 0, blocked: a.status === 'Done' ? false : t.blocked, week: a.status === 'Done' ? CURRENT_WEEK : t.week, sync: 'pending' } : t)) }
     case 'TASK_SYNCED':
       return { ...state, workTasks: state.workTasks.map((t) => (t.id === a.id ? { ...t, sync: a.remote } : t)), syncLog: [{ id: uid('s'), taskId: a.id, tool: a.tool, remote: a.remote, request: a.request, at: Date.now() }, ...state.syncLog].slice(0, 8) }
+    case 'REMOVE_NOTE':
+      return { ...state, notes: state.notes.filter((n) => n.id !== a.id) }
     case 'ADD_NOTE':
       return { ...state, notes: [...state.notes, { id: uid('n'), week: CURRENT_WEEK, taskId: a.taskId || null, tags: a.tags || [], text: a.text, at: Date.now(), dictated: a.dictated }] }
     case 'SET_RETURN_INTENT':

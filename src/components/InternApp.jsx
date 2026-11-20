@@ -14,7 +14,7 @@ import Circle from './Circle'
 import WrappedPage from './WrappedPage'
 import MyWork from './MyWork'
 
-const NAV = [['work', Briefcase, 'My Work'], ['echo', AudioLines, 'Echo Feed'], ['circles', MessagesSquare, 'My Circles'], ['wrapped', Gift, 'Wrapped']]
+const NAV = [['work', BookOpen, 'Journal'], ['echo', AudioLines, 'Echo Feed'], ['circles', MessagesSquare, 'My Circles'], ['wrapped', Gift, 'Wrapped']]
 
 export default function InternApp() {
   const [section, setSection] = useState('work')

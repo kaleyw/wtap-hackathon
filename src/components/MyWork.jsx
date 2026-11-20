@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { AlertTriangle, ArrowDown, Briefcase, Check, Copy, FileText, GitBranch, GripVertical, LayoutGrid, Loader2, Lock, MessageSquareText, NotebookPen, Plug, RefreshCw, Sparkles, StickyNote, X } from 'lucide-react'
+import { AlertTriangle, ArrowDown, ChevronDown, Trash2, Briefcase, Check, Copy, FileText, GitBranch, GripVertical, LayoutGrid, Loader2, Lock, MessageSquareText, NotebookPen, Plug, RefreshCw, Sparkles, StickyNote, X } from 'lucide-react'
 import { useStore } from '../store'
 import { CURRENT_WEEK, NOTE_TAGS, WORK_SOURCES, WORK_TASKS } from '../data/seed'
 import { generate } from '../ai/work'
@@ -51,14 +51,16 @@ export default function MyWork({ onEcho }) {
   return (
     <section>
       <div className="pagehead">
-        <div><h1>My Work</h1><p>Your tickets and your private notes in one place. Week {CURRENT_WEEK} of 16.</p></div>
+        <div><h1>Journal</h1><p>Your tickets and your private notes in one place. Week {CURRENT_WEEK} of 16.</p></div>
         <div className="row" style={{ marginLeft: 'auto' }}>
           <span className="pill"><Lock size={13} /> Private to you</span>
           <button className="btn pink small" onClick={() => document.getElementById('words')?.scrollIntoView({ behavior: 'smooth' })}><Sparkles size={14} /> Turn my work into words <ArrowDown size={14} /></button>
         </div>
       </div>
 
-      <TodayNote dispatch={dispatch} />
+      <TodayNote dispatch={dispatch}>
+        <NotesList notes={notes} tasks={tasks} onOpenTask={(id) => { setOpen(id); setJustDone(false) }} onRemove={(id) => { dispatch({ type: 'REMOVE_NOTE', id }); toast('Note deleted') }} />
+      </TodayNote>
 
       <Board tasks={tasks} notes={notes} onOpen={(id) => { setOpen(id); setJustDone(false) }} onMove={move} />
 
@@ -90,7 +92,7 @@ export default function MyWork({ onEcho }) {
 }
 
 /* ---------- quick note ---------- */
-function TodayNote({ dispatch, taskId = null, compact, initialTags = [], placeholder }) {
+function TodayNote({ dispatch, taskId = null, compact, initialTags = [], placeholder, children }) {
   const [text, setText] = useState('')
   const [tags, setTags] = useState(initialTags)
   const [dictated, setDictated] = useState(false)
@@ -111,6 +113,47 @@ function TodayNote({ dispatch, taskId = null, compact, initialTags = [], placeho
         <button className="btn small" onClick={save} disabled={!text.trim() && !tags.length}>Save note</button>
         <Dictate className="ml-auto" onText={(t) => { setText((d) => (d ? `${d} ${t}` : t)); setDictated(true) }} />
       </div>
+      {children}
+    </div>
+  )
+}
+
+/* ---------- your notes: collapsed to one line until you open it ---------- */
+function NotesList({ notes, tasks, onOpenTask, onRemove }) {
+  const [open, setOpen] = useState(false)
+  const [all, setAll] = useState(false)
+  const sorted = [...notes].sort((a, b) => b.week - a.week || (b.at || 0) - (a.at || 0))
+  const shown = all ? sorted : sorted.slice(0, 5)
+  const latest = sorted[0]
+  const title = (id) => tasks.find((t) => t.id === id)?.title
+  return (
+    <div className="mt-4 border-t border-slate-200 pt-3">
+      <button className="flex w-full items-center gap-2 text-left" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <b className="text-sm">My notes</b>
+        <span className="status" style={{ padding: '1px 8px', fontSize: 11, background: 'var(--cream-2)', color: 'var(--ink-2)' }}>{notes.length}</span>
+        {!open && latest && <span className="min-w-0 flex-1 truncate text-[13px] text-slate-500">Latest: {latest.text}</span>}
+        <ChevronDown size={16} className="ml-auto shrink-0 text-slate-500 transition" style={{ transform: open ? 'rotate(180deg)' : 'none' }} />
+      </button>
+      {open && (
+        <div className="mt-2">
+          <ul className="list">
+            {shown.map((n) => (
+              <li key={n.id} style={{ alignItems: 'flex-start' }}>
+                <span className="mono shrink-0 pt-0.5 text-xs text-slate-500" style={{ minWidth: 34 }}>W{n.week}</span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span className="block text-[14px]">{n.text}</span>
+                  <span className="mt-1 flex flex-wrap items-center gap-1.5">
+                    {n.tags.map((t) => <span key={t} className="status st-prog" style={{ padding: '1px 8px', fontSize: 10.5 }}>{t}</span>)}
+                    {n.taskId && <button className="link" style={{ fontSize: 12 }} onClick={() => onOpenTask(n.taskId)}>{n.taskId}: {title(n.taskId)}</button>}
+                  </span>
+                </span>
+                <button className="link shrink-0" onClick={() => onRemove(n.id)} aria-label="Delete note" title="Delete note"><Trash2 size={14} /></button>
+              </li>
+            ))}
+          </ul>
+          {sorted.length > 5 && <button className="link" style={{ fontSize: 13, marginTop: 6 }} onClick={() => setAll(!all)}>{all ? 'Show fewer' : `Show all ${sorted.length}`}</button>}
+        </div>
+      )}
     </div>
   )
 }

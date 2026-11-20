@@ -1,4 +1,4 @@
-// My Work: turn project tasks into (1) a manager-ready impact summary and (2) resume bullets.
+// Journal: turn project tasks into (1) a manager-ready impact summary and (2) resume bullets.
 // With VITE_ANTHROPIC_API_KEY it asks Claude; otherwise it uses built-in templates (labelled as such in the UI).
 import Anthropic from '@anthropic-ai/sdk'
 

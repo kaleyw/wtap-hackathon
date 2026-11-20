@@ -5,7 +5,7 @@ Anonymous, always-on feedback for RBC AI Group co-ops and new grads. This app me
 ## What's where
 
 - **Co-ops & new grads:** sidebar with
-  - **My Work**: one private workspace. A Jira-style board (Jira, GitHub Projects, Azure DevOps; sample data in the demo) with private notes on each ticket, a quick note with tags, and a gentle "How you're doing" read from your wording over the term plus your ticket progress (stuck tickets, admin share), always with the reasons. "Turn my work into words" writes a manager-ready impact summary (with coaching) or resume bullets from tickets + notes.
+  - **Journal**: one private workspace. A Jira-style board (Jira, GitHub Projects, Azure DevOps; sample data in the demo) with private notes on each ticket, a quick note with tags, and a gentle "How you're doing" read from your wording over the term plus your ticket progress (stuck tickets, admin share), always with the reasons. "Turn my work into words" writes a manager-ready impact summary (with coaching) or resume bullets from tickets + notes.
   - **Echo Feed**: post box at the top with a live Echo Shield preview ("What others will see") and one-tap examples; filters for co-op/new grad, line of business, province, office; trending; grouping; colour bar per category
   - **My Circles**: discussion threads for highly echoed issues
   - **Wrapped**: end-of-term recap, with playable slides

@@ -4,6 +4,8 @@ import { AI_ENABLED } from './ai/moderate'
 import InternApp from './components/InternApp'
 import Dashboard from './components/Dashboard'
 import { Toaster } from './components/ui'
+// Team logo (candor-logo-alt.svg is the version made for dark blue backgrounds, like this header)
+import logo from '../candor-logo-alt.svg'
 import { Moon, RotateCcw, ShieldCheck } from 'lucide-react'
 
 const VIEWS = [['intern', 'Co-ops & new grads'], ['team', 'Early Talent team']]
@@ -19,7 +21,7 @@ export default function App() {
   return (
     <>
       <header className="top">
-        <div className="brand"><span className="mk">ılıl</span>RBC Candor<small>AI Group · Early Talent</small></div>
+        <div className="brand"><img src={logo} alt="RBC Candor" className="logo" /><small>AI Group · Early Talent</small></div>
         <div className="views">
           {VIEWS.map(([k, l]) => <button key={k} className={view === k ? 'on' : ''} onClick={() => { setView(k); window.scrollTo(0, 0) }}>{l}</button>)}
         </div>
