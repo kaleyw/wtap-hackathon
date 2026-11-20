@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 300" role="img" aria-label="RBC Candor logo, stacked">
+  <title>RBC Candor (stacked)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;800&amp;display=swap');
+    .word { font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  </style>
+  <!-- Icon centred above the wordmark; same bubbles as the alt logo -->
+  <g transform="translate(95,16)">
+    <rect x="0" y="0" width="96" height="78" rx="24" fill="#FFFFFF"/>
+    <path d="M20 74 L12 100 L42 76 Z" fill="#FFFFFF"/>
+    <path d="M22 30 H66" stroke="#1B3F8F" stroke-width="7" stroke-linecap="round"/>
+    <path d="M22 48 H46" stroke="#1B3F8F" stroke-width="7" stroke-linecap="round" opacity="0.55"/>
+    <rect x="58" y="44" width="72" height="58" rx="20" fill="#F4C542" stroke="#1B3F8F" stroke-width="5"/>
+    <path d="M112 100 L124 120 L98 102 Z" fill="#F4C542"/>
+    <circle cx="80" cy="73" r="5" fill="#1B3F8F"/>
+    <circle cx="94" cy="73" r="5" fill="#1B3F8F"/>
+    <circle cx="108" cy="73" r="5" fill="#1B3F8F"/>
+  </g>
+  <text class="word" x="160" y="186" text-anchor="middle" font-size="18" font-weight="600" letter-spacing="9" fill="#F4C542">RBC</text>
+  <text class="word" x="160" y="250" text-anchor="middle" font-size="66" font-weight="800" letter-spacing="-2" fill="#FFFFFF">candor<tspan fill="#F4C542">.</tspan></text>
+</svg>

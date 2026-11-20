@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" role="img" aria-label="RBC Candor logo">
+  <title>RBC Candor</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@800&amp;family=Space+Grotesk:wght@700&amp;display=swap');
+    .rbc { font-family: 'Space Grotesk', 'Segoe UI', sans-serif; }
+    .candor { font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; font-weight: 800; }
+  </style>
+  <!-- Icon: open "C" speech bubble with ripple arcs -->
+  <g transform="translate(20,20)">
+    <!-- C-shaped bubble: thick arc open on the right -->
+    <path d="M100 30 A50 50 0 1 0 100 90" fill="none" stroke="#0051A5" stroke-width="18" stroke-linecap="round"/>
+    <!-- bubble tail -->
+    <path d="M28 98 L14 124 L48 108 Z" fill="#0051A5"/>
+    <!-- ripple arcs coming out of the opening -->
+    <path d="M108 46 A16 16 0 0 1 108 74" fill="none" stroke="#FFC72C" stroke-width="7" stroke-linecap="round"/>
+    <path d="M122 36 A30 30 0 0 1 122 84" fill="none" stroke="#FFC72C" stroke-width="7" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  <!-- Wordmark -->
+  <text class="rbc" x="176" y="70" font-size="24" font-weight="700" letter-spacing="6" fill="#0051A5">RBC</text>
+  <text class="candor" x="172" y="122" font-size="58" font-weight="800" letter-spacing="-1" fill="#0B1F4D">Candor</text>
+</svg>

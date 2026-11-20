@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 170" role="img" aria-label="RBC Candor logo, single bubble with ripples">
+  <title>RBC Candor (ripple)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;800&amp;display=swap');
+    .word { font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  </style>
+  <!-- Icon: one yellow bubble with ripple arcs, echoing the slide's rings -->
+  <g transform="translate(20,30)">
+    <rect x="0" y="0" width="92" height="74" rx="24" fill="#F4C542"/>
+    <path d="M22 70 L14 98 L46 72 Z" fill="#F4C542"/>
+    <circle cx="28" cy="37" r="6" fill="#1B3F8F"/>
+    <circle cx="46" cy="37" r="6" fill="#1B3F8F"/>
+    <circle cx="64" cy="37" r="6" fill="#1B3F8F"/>
+    <g fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round">
+      <path d="M106 20 A26 26 0 0 1 106 54"/>
+      <path d="M120 8 A42 42 0 0 1 120 66" opacity="0.6"/>
+    </g>
+  </g>
+  <text class="word" x="182" y="68" font-size="20" font-weight="600" letter-spacing="9" fill="#F4C542">RBC</text>
+  <text class="word" x="178" y="128" font-size="66" font-weight="800" letter-spacing="-2" fill="#FFFFFF">candor<tspan fill="#F4C542">.</tspan></text>
+</svg>
