@@ -1,0 +1,71 @@
+@import "tailwindcss";
+@import "./echo-theme.css";
+
+/* Map Tailwind's colour names onto the team's pastel tokens, so every
+   component follows their palette and their light/dark switch. */
+@theme {
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-white: var(--surface);
+  --color-brand: var(--navy);
+  --color-brand-dark: var(--navy);
+  --color-accent: var(--pink-2);
+
+  --color-slate-50: var(--cream);
+  --color-slate-100: var(--cream-2);
+  --color-slate-200: var(--grid);
+  --color-slate-300: var(--axis);
+  --color-slate-400: var(--muted);
+  --color-slate-500: var(--muted);
+  --color-slate-600: var(--ink-2);
+  --color-slate-700: var(--ink-2);
+  --color-slate-800: var(--ink);
+  --color-slate-900: var(--ink);
+  --color-slate-950: #1e2841;
+
+  --color-blue-50: var(--blue-mist);
+  --color-blue-100: var(--blue-soft);
+  --color-blue-200: var(--blue-2);
+  --color-blue-700: var(--navy);
+  --color-blue-800: var(--navy);
+  --color-blue-900: var(--navy);
+
+  --color-emerald-50: var(--mint-soft);
+  --color-emerald-200: color-mix(in srgb, var(--mint) 35%, transparent);
+  --color-emerald-300: color-mix(in srgb, var(--mint) 50%, transparent);
+  --color-emerald-500: var(--mint);
+  --color-emerald-600: var(--mint);
+  --color-emerald-700: var(--good-text);
+  --color-emerald-800: var(--good-text);
+  --color-emerald-900: var(--good-text);
+
+  --color-amber-50: var(--peach-soft);
+  --color-amber-200: color-mix(in srgb, var(--peach) 35%, transparent);
+  --color-amber-400: var(--peach);
+  --color-amber-500: var(--peach);
+  --color-amber-600: var(--peach);
+  --color-amber-800: var(--peach);
+  --color-amber-900: var(--peach);
+
+  --color-violet-50: var(--lav-soft);
+  --color-violet-200: color-mix(in srgb, var(--lav) 40%, transparent);
+  --color-violet-600: var(--lav);
+  --color-violet-700: #7463c9;
+  --color-violet-800: #7463c9;
+  --color-violet-900: #7463c9;
+
+  --color-red-50: var(--pink-mist);
+  --color-red-200: var(--pink-2);
+  --color-red-500: var(--critical);
+  --color-red-600: var(--critical);
+  --color-red-700: var(--critical);
+  --color-red-800: var(--critical);
+  --color-red-900: var(--critical);
+  --color-rose-50: var(--pink-mist);
+  --color-rose-200: var(--pink-2);
+  --color-rose-800: var(--pink);
+  --color-rose-900: var(--pink);
+}
+
+/* their body styles win over Tailwind preflight */
+body { background: var(--page); color: var(--ink); }
+mark { font-weight: 700; }
