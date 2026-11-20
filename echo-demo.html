@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Echo Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  /* pastel palette */
+  --navy:#34507f; --navy-2:#4a6da3; --blue:#7fa9e0; --blue-2:#a9c8f0; --blue-soft:#e2eefc; --blue-mist:#f0f6fe;
+  --pink:#df7aa3; --pink-2:#f2a9c6; --pink-soft:#fce6ef; --pink-mist:#fff3f8;
+  --cream:#fbf6ee; --cream-2:#f4ebdc; --cream-3:#ead9bf;
+  --lav:#9b8ce0; --lav-soft:#eeeafc; --mint:#3f9a72; --mint-soft:#e2f4ea; --peach:#cf7b4a; --peach-soft:#fdeedf;
+  /* roles */
+  --page:var(--cream); --surface:#ffffff; --surface-2:var(--blue-mist); --sunk:var(--cream-2);
+  --ink:#1f2b45; --ink-2:#56617a; --muted:#8a92a6;
+  --grid:#ebe4d6; --axis:#d3c7b0; --border:rgba(52,80,127,.12);
+  --brand:var(--navy); --brand-ink:#fff; --accent:var(--pink);
+  --good-text:#2b7a55; --critical:#c9454f;
+  --seq-1:#eaf2fd; --seq-2:#cfe1f9; --seq-3:#a9c8f0; --seq-4:#7fa9e0; --seq-5:#5a86c4; --seq-6:#40659f; --seq-7:#2b4675;
+  --shadow:0 10px 30px rgba(52,80,127,.09); --shadow-s:0 2px 10px rgba(52,80,127,.07);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --navy:#8fb4ea; --navy-2:#a9c8f0; --blue:#7fa9e0; --blue-soft:#1f3150; --blue-mist:#1b2436;
+    --pink:#f095bb; --pink-2:#f2a9c6; --pink-soft:#3b2434; --pink-mist:#2a1f2a;
+    --cream:#14171f; --cream-2:#1e2230; --cream-3:#2a3042;
+    --lav-soft:#2b2846; --mint:#62c99b; --mint-soft:#183629; --peach:#f0a072; --peach-soft:#3a2b20;
+    --surface:#1b2130; --ink:#eef2fa; --ink-2:#b6bfd2; --muted:#8a92a6;
+    --grid:#2a3246; --axis:#3a445c; --border:rgba(255,255,255,.09);
+    --brand-ink:#14171f; --good-text:#62c99b;
+    --seq-1:#1e2940; --seq-2:#22385e; --seq-3:#2d4f86; --seq-4:#4a6da3; --seq-5:#7fa9e0; --seq-6:#a9c8f0; --seq-7:#d9e8fb;
+    --shadow:0 10px 30px rgba(0,0,0,.35); --shadow-s:0 2px 10px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --navy:#8fb4ea; --navy-2:#a9c8f0; --blue:#7fa9e0; --blue-soft:#1f3150; --blue-mist:#1b2436;
+  --pink:#f095bb; --pink-2:#f2a9c6; --pink-soft:#3b2434; --pink-mist:#2a1f2a;
+  --cream:#14171f; --cream-2:#1e2230; --cream-3:#2a3042;
+  --lav-soft:#2b2846; --mint:#62c99b; --mint-soft:#183629; --peach:#f0a072; --peach-soft:#3a2b20;
+  --surface:#1b2130; --ink:#eef2fa; --ink-2:#b6bfd2; --muted:#8a92a6;
+  --grid:#2a3246; --axis:#3a445c; --border:rgba(255,255,255,.09);
+  --brand-ink:#14171f; --good-text:#62c99b;
+  --seq-1:#1e2940; --seq-2:#22385e; --seq-3:#2d4f86; --seq-4:#4a6da3; --seq-5:#7fa9e0; --seq-6:#a9c8f0; --seq-7:#d9e8fb;
+  --shadow:0 10px 30px rgba(0,0,0,.35); --shadow-s:0 2px 10px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);background:var(--page);font:15px/1.55 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+button,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+/* ===== header ===== */
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 28px;
+  background:linear-gradient(110deg,#34507f 0%,#5a86c4 55%,#e8a3c0 100%);color:#fff;box-shadow:0 4px 20px rgba(52,80,127,.18)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:24px;letter-spacing:-.4px}
+.brand .mk{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:16px;letter-spacing:-1px}
+.brand small{font-size:12px;font-weight:600;opacity:.85;letter-spacing:.3px;margin-left:4px}
+.views{display:flex;gap:4px;background:rgba(255,255,255,.18);padding:5px;border-radius:999px;margin-left:auto}
+.views button{border:0;background:transparent;color:#fff;padding:8px 18px;border-radius:999px;font-size:14px;font-weight:600;opacity:.9}
+.views button.on{background:#fff;color:#34507f;opacity:1;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.theme-btn{border:0;background:rgba(255,255,255,.2);color:#fff;border-radius:999px;width:40px;height:40px;font-size:18px}
+
+/* ===== layout ===== */
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 68px)}
+.side{background:var(--surface);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;gap:6px;position:sticky;top:68px;height:calc(100vh - 68px)}
+.me{display:flex;gap:12px;align-items:center;padding:12px;border-radius:18px;background:linear-gradient(135deg,var(--blue-soft),var(--pink-soft));margin-bottom:14px}
+.me .av{width:46px;height:46px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:24px}
+.me b{display:block;font-size:14px}.me span{font-size:12px;color:var(--ink-2)}
+.side .nb{border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:14px;font-size:15px;display:flex;align-items:center;gap:12px;color:var(--ink-2);font-weight:600}
+.side .nb .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:var(--cream-2)}
+.side .nb.on{background:var(--blue-mist);color:var(--navy)}
+.side .nb.on .ic{background:var(--blue-soft)}
+.side .nb:nth-of-type(2).on .ic{background:var(--pink-soft)}
+.side .nb:nth-of-type(3).on .ic{background:var(--peach-soft)}
+.side .foot{margin-top:auto;font-size:12px;color:var(--muted);padding:12px;border-radius:14px;background:var(--cream)}
+.main{padding:28px 32px 60px;max-width:1240px;width:100%}
+.pagehead{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.pagehead h1{font-size:28px;margin:0;letter-spacing:-.6px}
+.pagehead p{margin:2px 0 0;color:var(--ink-2)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:999px;background:var(--mint-soft);color:var(--good-text)}
+.cols{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start}
+.cols.feed{grid-template-columns:1fr 340px}
+.card{background:var(--surface);border-radius:24px;padding:22px;box-shadow:var(--shadow-s);border:1px solid var(--border);margin-bottom:18px}
+.card h2{font-size:21px;margin:0 0 4px;letter-spacing:-.3px}
+.card h3{font-size:16px;margin:0 0 2px}
+.sub{font-size:13.5px;color:var(--ink-2);margin:0}
+.eyebrow{font-size:11px;letter-spacing:.9px;text-transform:uppercase;font-weight:800;color:var(--muted)}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{border:0;background:var(--navy);color:var(--brand-ink);border-radius:999px;padding:11px 22px;font-weight:700;display:inline-flex;gap:8px;align-items:center;justify-content:center;box-shadow:0 6px 16px color-mix(in srgb,var(--navy) 25%,transparent)}
+.btn.pink{background:var(--pink);color:#fff;box-shadow:0 6px 16px color-mix(in srgb,var(--pink) 30%,transparent)}
+.btn.block{width:100%}
+.btn.ghost{background:var(--surface);color:var(--navy);border:1.5px solid var(--navy);box-shadow:none}
+.btn.small{padding:7px 15px;font-size:13px}
+.link{border:0;background:transparent;color:var(--navy);padding:0;font-size:13.5px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+textarea{width:100%;border:1.5px solid var(--border);border-radius:16px;padding:12px 14px;min-height:96px;resize:vertical;background:var(--cream);color:var(--ink);font:inherit;outline:none;margin-top:14px}
+textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-soft)}
+
+/* ===== journal ===== */
+.hero{background:linear-gradient(135deg,var(--blue-soft) 0%,var(--pink-mist) 70%,var(--cream) 100%);border:0;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,var(--pink-soft),transparent 70%)}
+.rec{display:flex;align-items:center;gap:18px;margin-top:20px;position:relative;z-index:1}
+.micbtn{width:84px;height:84px;border-radius:50%;border:0;display:grid;place-items:center;font-size:34px;color:#fff;background:linear-gradient(135deg,var(--blue),var(--navy));box-shadow:0 12px 28px color-mix(in srgb,var(--navy) 35%,transparent);position:relative;flex:none}
+.micbtn.on{background:linear-gradient(135deg,var(--pink-2),var(--pink));box-shadow:0 12px 28px color-mix(in srgb,var(--pink) 45%,transparent)}
+.micbtn.on::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:3px solid var(--pink-2);animation:ring 1.2s ease-out infinite}
+@keyframes ring{from{transform:scale(.9);opacity:1}to{transform:scale(1.25);opacity:0}}
+.rec b{display:block;font-size:17px}
+.entry{font-size:16px;line-height:1.65;margin-top:10px}
+mark{background:var(--peach-soft);color:var(--peach);border-radius:6px;padding:0 5px;font-weight:700}
+.insight{padding:16px 0;border-top:1px dashed var(--grid)}
+.insight:first-of-type{border-top:0;padding-top:8px}
+.ins-h{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+.ins-ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:19px;flex:none}
+.wt{display:grid;grid-template-columns:56px 1fr;gap:8px;align-items:center;font-size:12px;color:var(--ink-2);margin-top:8px}
+.wtbar{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px}
+.wtbar i:first-child{background:var(--blue)}
+.wtbar i:last-child{background:var(--pink-2)}
+.lg{display:flex;gap:14px;font-size:12px;color:var(--ink-2);margin-top:8px}
+.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.quote{background:var(--cream);border-radius:14px;padding:10px 14px;font-size:14px;margin-top:8px;font-style:italic;border-left:3px solid var(--cream-3)}
+.warn{color:var(--peach);font-weight:700;font-size:13px;margin-top:8px}
+.circ{display:flex;align-items:flex-end;gap:10px;height:90px;margin-top:10px}
+.circ div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;color:var(--muted);gap:4px}
+.circ span{width:100%;border-radius:8px;background:var(--blue)}
+.circ .dn span{background:var(--pink-2)}
+.talk{background:linear-gradient(135deg,var(--navy) 0%,#5a86c4 60%,#d995b4 100%);border:0;color:#fff}
+.talk .sub{color:rgba(255,255,255,.85)}
+.talk .btn{background:#fff;color:var(--navy);box-shadow:none;margin-top:10px}
+.talk .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+:root[data-theme="dark"] .talk .btn{color:#34507f}
+
+/* ===== filters ===== */
+.filters{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:12px 14px;box-shadow:var(--shadow-s);margin-bottom:20px}
+.flabel{font-size:11px;letter-spacing:.9px;text-transform:uppercase;font-weight:800;color:var(--muted);margin-right:2px}
+.cohorts{display:flex;gap:6px;flex-wrap:wrap}
+.coh{border:1.5px solid var(--border);background:var(--cream);border-radius:999px;padding:6px 13px;font-size:13px;font-weight:700;color:var(--ink-2);display:inline-flex;gap:7px;align-items:center}
+.coh .dot{width:8px;height:8px;border-radius:50%;background:var(--axis)}
+.coh .dot.active{background:var(--mint);box-shadow:0 0 0 3px var(--mint-soft)}
+.coh .dot.upcoming{background:var(--lav)}
+.coh.on{background:var(--navy);border-color:var(--navy);color:var(--brand-ink)}
+.sel{appearance:none;border:1.5px solid var(--border);background:var(--pink-mist) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23df7aa3' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;border-radius:999px;padding:8px 38px 8px 14px;font-weight:700;font-size:13.5px;color:var(--ink);cursor:pointer}
+.fsep{width:1px;height:28px;background:var(--grid)}
+.fsum{margin-left:auto;font-size:13px;color:var(--ink-2)}
+.empty{text-align:center;padding:50px 20px}
+.empty .big{font-size:48px}
+
+/* ===== feed ===== */
+.tabs{display:flex;gap:22px;border-bottom:1.5px solid var(--grid);margin-bottom:16px}
+.tabs button{border:0;background:transparent;padding:10px 0;font-size:15px;color:var(--ink-2);font-weight:700;border-bottom:3px solid transparent;margin-bottom:-1.5px}
+.tabs button.on{color:var(--ink);border-color:var(--pink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.chip{border:1.5px solid var(--border);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--ink-2)}
+.chip.on{background:var(--pink-soft);color:var(--pink);border-color:var(--pink-2)}
+.post{margin-bottom:14px}
+.ph{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-2)}
+.ava{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:21px}
+.lobt{font-weight:700;color:var(--ink)}
+.theme{margin-left:auto;font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px;background:var(--blue-soft);color:var(--navy)}
+.theme.win{background:var(--mint-soft);color:var(--good-text)}
+.theme.ment{background:var(--pink-soft);color:var(--pink)}
+.theme.car{background:var(--lav-soft);color:#7463c9}
+.theme.team{background:var(--peach-soft);color:var(--peach)}
+.voice{display:flex;align-items:center;gap:12px;background:var(--blue-mist);border-radius:16px;padding:10px 14px;margin-top:14px}
+.play{width:40px;height:40px;border-radius:50%;border:0;background:var(--navy);color:var(--brand-ink);display:grid;place-items:center;font-size:14px;flex:none}
+.wave{display:flex;align-items:center;gap:3px;flex:1;height:28px}
+.wave i{width:3px;border-radius:2px;background:var(--blue-2)}
+.wave i.p{background:var(--navy)}
+.vt{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.vnote{font-size:12px;color:var(--muted);margin-top:6px}
+.ptext{font-size:16px;margin:12px 0 0;line-height:1.6}
+.sent{display:inline-flex;gap:5px;align-items:center;margin-top:12px;font-size:12px;font-weight:800;padding:5px 11px;border-radius:999px;background:var(--peach-soft);color:var(--peach)}
+.sent.prog{background:var(--blue-soft);color:var(--navy)}
+.pfoot{display:flex;align-items:center;gap:14px;margin-top:14px;font-size:13.5px;color:var(--ink-2)}
+.echo{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--pink-2);background:var(--pink-mist);color:var(--pink);border-radius:999px;padding:8px 16px 8px 12px;font-weight:800;font-size:14px;transition:transform .15s}
+.echo .ei{font-size:18px;line-height:1}
+.echo:hover{transform:scale(1.05)}
+.echo.on{background:var(--pink);border-color:var(--pink);color:#fff}
+.reply{margin-top:12px;border-left:3px solid var(--blue);padding:10px 14px;background:var(--blue-mist);border-radius:0 14px 14px 0;font-size:14px}
+.ysd{background:linear-gradient(135deg,var(--mint-soft),var(--cream));border:0}
+.ysd .t{display:flex;gap:6px;align-items:center;color:var(--good-text);font-weight:800;font-size:13px}
+.ysd p{margin:8px 0 0;font-size:14.5px}
+.share{background:linear-gradient(135deg,var(--pink-soft),var(--blue-soft));border:0;text-align:center}
+.share .bigmic{width:64px;height:64px;border-radius:50%;margin:4px auto 10px;display:grid;place-items:center;font-size:28px;background:var(--surface);box-shadow:var(--shadow-s)}
+.trend li{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px dashed var(--grid);font-size:14px}
+.trend li:first-child{border-top:0}
+.trend .n{margin-left:auto;font-weight:800;color:var(--pink)}
+.trend ul{list-style:none;margin:8px 0 0;padding:0}
+.status{font-size:12px;font-weight:800;padding:4px 11px;border-radius:999px;display:inline-block;white-space:nowrap}
+.st-done{background:var(--mint-soft);color:var(--good-text)}
+.st-prog{background:var(--blue-soft);color:var(--navy)}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(30,40,65,.4);z-index:40;display:grid;place-items:center;padding:16px}
+.modal{background:var(--surface);width:540px;max-width:100%;border-radius:26px;padding:24px;box-shadow:var(--shadow);animation:pop .2s ease-out}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:none;opacity:1}}
+.mod{font-size:13.5px;margin-top:10px;padding:10px 14px;border-radius:14px;background:var(--peach-soft)}
+
+/* wrapped */
+.wgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.wr{border:0;min-height:190px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;margin:0}
+.wr .emo{position:absolute;right:20px;top:16px;font-size:54px;opacity:.9}
+.wr .big{font-size:40px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin:6px 0}
+.wr1{background:linear-gradient(140deg,var(--blue-soft),var(--lav-soft))}
+.wr2{background:linear-gradient(140deg,var(--pink-soft),var(--peach-soft))}
+.wr3{background:linear-gradient(140deg,var(--mint-soft),var(--blue-soft))}
+.wr4{background:linear-gradient(140deg,var(--cream-2),var(--pink-soft))}
+
+/* dashboard */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
+.kpi{position:relative;margin:0}
+.kpi .ic{position:absolute;right:18px;top:18px;width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:24px}
+.kpi .v{font-size:34px;font-weight:800;margin-top:8px;letter-spacing:-.6px}
+.kpi .d{font-size:13px;color:var(--ink-2)}
+.k1{background:linear-gradient(160deg,var(--surface) 55%,var(--blue-soft))}.k1 .ic{background:var(--blue-soft)}
+.k2{background:linear-gradient(160deg,var(--surface) 55%,var(--pink-soft))}.k2 .ic{background:var(--pink-soft)}
+.k3{background:linear-gradient(160deg,var(--surface) 55%,var(--cream-2))}.k3 .ic{background:var(--cream-2)}
+.k4{background:linear-gradient(160deg,var(--surface) 55%,var(--mint-soft))}.k4 .ic{background:var(--mint-soft)}
+.up-bad{color:var(--critical);font-weight:800}
+.up-good{color:var(--good-text);font-weight:800}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid2 .card{margin:0}
+.dash .sub{margin-bottom:14px}
+.hm{display:grid;gap:4px;font-size:13px}
+.hm .c{height:42px;border-radius:10px;display:grid;place-items:center;font-weight:800}
+.hm .c:hover{outline:2px solid var(--pink);outline-offset:-2px}
+.hm .rh{display:flex;align-items:center;color:var(--ink-2);padding-right:6px;font-weight:600;font-size:12.5px}
+.hm .ch{color:var(--ink-2);text-align:center;font-size:12px;padding-bottom:4px;font-weight:600}
+.legend-ramp{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:12px}
+.legend-ramp i{display:inline-block;width:24px;height:10px;border-radius:3px}
+svg text{fill:var(--muted);font-size:11px;font-family:inherit}
+.list{list-style:none;margin:0;padding:0}
+.list li{padding:11px 0;border-top:1px dashed var(--grid);display:flex;gap:10px;align-items:center;font-size:14px}
+.list li:first-child{border-top:0}
+.num{font-variant-numeric:tabular-nums;font-weight:800;min-width:36px;color:var(--pink);font-size:16px}
+.ba{display:flex;gap:16px;align-items:flex-end;height:160px;padding:0 10px;border-bottom:1.5px solid var(--axis)}
+.ba .b{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.ba .bar{width:52%;border-radius:10px 10px 0 0}
+.ba .bv{font-weight:800;margin-bottom:4px;font-size:18px}
+.ba-l{display:flex;gap:16px;padding:6px 10px 0;font-size:13px;color:var(--ink-2);font-weight:600}
+.ba-l span{flex:1;text-align:center}
+.prompt{border-left:4px solid var(--pink-2);padding:14px 16px;background:var(--pink-mist);border-radius:0 16px 16px 0;margin-top:12px}
+.prompt.b{border-color:var(--blue);background:var(--blue-mist)}
+.prompt.g{border-color:var(--mint);background:var(--mint-soft)}
+.tip{position:fixed;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:12px;padding:9px 12px;font-size:13px;z-index:50;display:none;max-width:250px}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--navy);color:var(--brand-ink);padding:12px 20px;border-radius:999px;font-size:14px;font-weight:700;z-index:60;opacity:0;transition:opacity .25s;max-width:92vw;text-align:center;box-shadow:var(--shadow)}
+.toast.show{opacity:1}
+.wide{padding:28px 32px 60px;max-width:1300px;margin:0 auto}
+
+@media (max-width:1000px){.cols,.cols.feed{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+@media (max-width:760px){
+  .shell{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:10px 16px;border-right:0;border-bottom:1px solid var(--border)}
+  .me,.side .foot{display:none}
+  .main,.wide{padding:20px 16px 50px}
+  .top{padding:12px 16px}
+  .wgrid{grid-template-columns:1fr}
+  .fsep{display:none}.fsum{margin-left:0}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="mk">ılıl</span>echo<small>RBC AI Group · Early Talent</small></div>
+  <div class="views">
+    <button class="on" data-view="intern">🎓 Intern</button>
+    <button data-view="team">📊 Early Talent Team</button>
+    <button data-view="manager">🧭 Manager</button>
+  </div>
+  <button class="theme-btn" id="themeBtn" title="Toggle light/dark">◐</button>
+</header>
+
+<!-- ================= INTERN ================= -->
+<div id="v-intern" class="shell">
+  <aside class="side">
+    <div class="me"><span class="av">🌸</span><div><b>Anonymous intern</b><span>Fall 2026 · Week 7 of 16</span></div></div>
+    <button class="nb on" data-s="journal"><span class="ic">📓</span>My Journal</button>
+    <button class="nb" data-s="echo"><span class="ic">🔊</span>Echo Feed</button>
+    <button class="nb" data-s="wrapped"><span class="ic">🎁</span>Wrapped</button>
+    <div class="foot">🔒 Your journal is private. Echo posts are anonymous, always.</div>
+  </aside>
+
+  <main class="main">
+    <!-- JOURNAL -->
+    <section id="s-journal">
+      <div class="pagehead"><div><h1>Good evening 🌙</h1><p>Thursday, Nov 19 · Week 7 of 16</p></div><span class="pill" style="margin-left:auto">🔒 Private to you</span></div>
+      <div class="cols">
+        <div>
+          <div class="card hero">
+            <h2 style="font-size:26px">How was your day?</h2>
+            <p class="sub" style="position:relative;z-index:1">Just tell it like a story. 30 seconds is plenty. Nobody hears this but you.</p>
+            <div class="rec">
+              <button class="micbtn" id="micBtn" aria-label="Record">🎙️</button>
+              <div><b id="recLabel">Tap to record</b><button class="link" id="typeBtn">or type instead</button></div>
+            </div>
+            <div id="typeBox" class="hidden" style="position:relative;z-index:1">
+              <textarea id="journalTxt" placeholder="What happened today?"></textarea>
+              <button class="btn small" style="margin-top:10px" id="saveJournal">Save entry</button>
+            </div>
+          </div>
+          <div id="entries">
+            <div class="card">
+              <div class="row"><span class="eyebrow">Today's entry</span><span class="sub" style="margin-left:auto">6:42 pm · 0:31 🎙️</span></div>
+              <div class="entry">"Spent most of the day formatting the Q4 deck <mark>again</mark>. <mark>They</mark> moved the sprint demo so I didn't get to present. Had lunch <mark>alone</mark> because everyone was in meetings."</div>
+            </div>
+          </div>
+          <div class="card talk" id="talk">
+            <h2 style="font-size:20px">Want to talk it through? 💬</h2>
+            <p class="sub">Sounds like you haven't been getting the work you hoped for. You decide what happens next.</p>
+            <div class="row" style="margin-top:8px">
+              <button class="btn" onclick="talk('Chat opened with a past AI Group intern. You both stay anonymous 🤝')">Chat with a past intern, anonymously</button>
+              <button class="btn ghost" onclick="talk('Your coordinator will reach out within 1 business day. Only they see your name.')">Talk to a coordinator (shares your name)</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>What Echo noticed 🔍</h2>
+          <p class="sub">From your last 3 weeks. Only you can see this.</p>
+          <div class="insight">
+            <div class="ins-h"><span class="ins-ic" style="background:var(--blue-soft)">👥</span><div><h3>"We" turned into "they"</h3><p class="sub">How you talk about your team</p></div></div>
+            <div class="wt"><span>Week 2</span><div class="wtbar"><i style="flex:92"></i><i style="flex:8"></i></div></div>
+            <div class="wt"><span>Week 7</span><div class="wtbar"><i style="flex:18"></i><i style="flex:82"></i></div></div>
+            <div class="lg"><span><i style="background:var(--blue)"></i>"we"</span><span><i style="background:var(--pink-2)"></i>"they"</span></div>
+          </div>
+          <div class="insight">
+            <div class="ins-h"><span class="ins-ic" style="background:var(--peach-soft)">🔁</span><h3>Your week-1 worry is showing up</h3></div>
+            <div class="quote">"I'll end up doing admin work instead of real tech work."</div>
+            <div class="warn">Came up in 4 of your last 5 entries</div>
+          </div>
+          <div class="insight">
+            <div class="ins-h"><span class="ins-ic" style="background:var(--pink-soft)">🫂</span><div><h3>Your circle is getting smaller</h3><p class="sub">People you mentioned per week</p></div></div>
+            <div class="circ">
+              <div><span style="height:82%"></span>Wk 2</div><div><span style="height:66%"></span>Wk 3</div><div><span style="height:56%"></span>Wk 4</div>
+              <div><span style="height:40%"></span>Wk 5</div><div class="dn"><span style="height:22%"></span>Wk 6</div><div class="dn"><span style="height:13%"></span>Wk 7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ECHO FEED -->
+    <section id="s-echo" class="hidden">
+      <div class="pagehead"><div><h1>Echo Feed 🔊</h1><p>What early talent across RBC is saying. Tap Echo if it's true for you too.</p></div><span class="pill" style="margin-left:auto">Anonymous. Always.</span></div>
+      <div class="filters" data-filters></div>
+      <div class="cols feed">
+        <div>
+          <div class="tabs"><button class="on" data-ft="top">🔥 Top</button><button data-ft="new">✨ New</button><button data-ft="ysd">✅ You said, we did</button></div>
+          <div class="chips" id="chips"></div>
+          <div id="feed"></div>
+        </div>
+        <div>
+          <div class="card share">
+            <div class="bigmic">🎙️</div>
+            <h3>Something on your mind?</h3>
+            <p class="sub" style="margin-bottom:14px">Post by voice or text. Voices are disguised.</p>
+            <button class="btn pink block" id="shareBtn">Share anonymously</button>
+          </div>
+          <div class="card trend"><h3>📈 Trending topics</h3><p class="sub">Echoes this week, current filters</p><ul id="trendList"></ul></div>
+          <div class="card ysd" id="ysdSide"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WRAPPED -->
+    <section id="s-wrapped" class="hidden">
+      <div class="pagehead"><div><h1>Your term, wrapped 🎁</h1><p>Fall 2026 · built privately from your journal</p></div><button class="btn pink" style="margin-left:auto" onclick="toast('Talking points copied for your final review 📝')">Turn into review talking points</button></div>
+      <div class="wgrid">
+        <div class="card wr wr1"><span class="emo">🎙️</span><div class="eyebrow">You recorded</div><div class="big">42 entries</div><p class="sub">That's 21 minutes of your story.</p></div>
+        <div class="card wr wr2"><span class="emo">✨</span><div class="eyebrow">Your most energized moments</div><div class="big">Presenting</div><p class="sub">Your voice got brighter every time you demoed your work.</p></div>
+        <div class="card wr wr3"><span class="emo">🫶</span><div class="eyebrow">Your people</div><div class="big">12 new names</div><p class="sub">Priya came up the most. Maybe send a thank-you?</p></div>
+        <div class="card wr wr4"><span class="emo">📊</span><div class="eyebrow">Your top theme</div><div class="big">Learning SQL</div><p class="sub">Use it as a talking point in your final review.</p></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ================= TEAM DASHBOARD ================= -->
+<section id="v-team" class="wide dash hidden">
+  <div class="pagehead"><div><h1>Early Talent dashboard 📊</h1><p>All data is anonymous · only groups of 5 or more are shown</p></div></div>
+  <div class="filters" data-filters></div>
+  <div id="dashEmpty" class="card empty hidden"><div class="big">🌱</div><h2>This cohort hasn't started yet</h2><p class="sub">Winter 2027 starts in January. Week-1 check-ins open on day one.</p></div>
+  <div id="dashBody">
+    <div class="kpis">
+      <div class="card kpi k1"><span class="ic">💙</span><div class="eyebrow">Cohort pulse</div><div class="v" id="kPulse"></div><div class="d" id="kPulseD"></div></div>
+      <div class="card kpi k2"><span class="ic">🛟</span><div class="eyebrow">Leaving signals</div><div class="v" id="kRisk"></div><div class="d" id="kRiskD"></div></div>
+      <div class="card kpi k3"><span class="ic">🤝</span><div class="eyebrow">Participation</div><div class="v" id="kPart"></div><div class="d">our trust score</div></div>
+      <div class="card kpi k4"><span class="ic">📬</span><div class="eyebrow">Open issues</div><div class="v" id="kOpen"></div><div class="d" id="kOpenD"></div></div>
+    </div>
+    <div class="grid2" style="margin-bottom:18px">
+      <div class="card">
+        <h2 id="heatTitle">Where to act</h2>
+        <p class="sub">Negative posts + echoes. Hover a cell for details.</p>
+        <div id="heat"></div>
+        <div class="legend-ramp">Fewer <i style="background:var(--seq-1)"></i><i style="background:var(--seq-3)"></i><i style="background:var(--seq-5)"></i><i style="background:var(--seq-7)"></i> More</div>
+      </div>
+      <div class="card">
+        <h2>Interns showing leaving signals, by week</h2>
+        <p class="sub">Counts only. Pink bands are the danger zones: midterms and return-offer season.</p>
+        <div id="riskChart"></div>
+        <p class="sub" style="margin:8px 0 0">Top drivers: <b>no meaningful work</b> 41% · <b>shrinking circle</b> 33% · <b>"we" → "they"</b> 26%</p>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h2>Most-echoed posts</h2>
+        <p class="sub">Posts with 25+ echoes are sent to you automatically. Respond to close the loop.</p>
+        <ul class="list" id="topList"></ul>
+      </div>
+      <div class="card">
+        <h2>Did it work? Week 1 buddy system</h2>
+        <p class="sub">Onboarding posts per week, 3 weeks before vs. 3 weeks after launch</p>
+        <div class="ba">
+          <div class="b"><div class="bv" id="baB"></div><div class="bar" id="baBb" style="background:var(--pink-2)"></div></div>
+          <div class="b"><div class="bv" id="baA"></div><div class="bar" id="baAb" style="background:var(--navy-2)"></div></div>
+        </div>
+        <div class="ba-l"><span>Before</span><span>After</span></div>
+        <p class="sub" style="margin:12px 0 0" id="baNote"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MANAGER ================= -->
+<section id="v-manager" class="wide dash hidden">
+  <div class="pagehead"><div><h1>Manager view 🧭</h1><p>Applied ML team · Technology & Operations · 7 interns. Team-level themes only, never individual posts or journals.</p></div></div>
+  <div class="kpis">
+    <div class="card kpi k1"><span class="ic">💙</span><div class="eyebrow">Team pulse</div><div class="v">61</div><div class="d"><span class="up-bad">▼ 6</span> vs cohort 68</div></div>
+    <div class="card kpi k2"><span class="ic">🌱</span><div class="eyebrow">Top theme</div><div class="v" style="font-size:22px">Career growth</div><div class="d">echoed 38 times</div></div>
+    <div class="card kpi k3"><span class="ic">📅</span><div class="eyebrow">Midterm conversations</div><div class="v">in 5 days</div><div class="d">Week 6 is a typical dip</div></div>
+    <div class="card kpi k4"><span class="ic">🛟</span><div class="eyebrow">Team signals</div><div class="v" style="font-size:22px">Elevated</div><div class="d">exact count hidden for groups under 5</div></div>
+  </div>
+  <div class="card">
+    <h2>Before your midterm conversations</h2>
+    <p class="sub">Suggested talking points, based on what your team is echoing</p>
+    <div class="prompt"><b>🧭 Unclear what happens after the term.</b> Share what return offers and moves to other teams look like in the AI Group, and ask where each intern wants to grow.</div>
+    <div class="prompt b"><b>🛠️ Wanting more ownership.</b> Ask: "What's one piece of work you'd like to own end to end before the term ends?"</div>
+    <div class="prompt g"><b>💚 Strength: your team echoes "I learn a lot from code reviews."</b> Keep doing it, and tell them.</div>
+  </div>
+</section>
+
+<div class="modal-bg hidden" id="modal">
+  <div class="modal">
+    <div class="row"><h2 style="margin:0;font-size:22px">Share anonymously</h2><button class="link" style="margin-left:auto" id="closeModal">Cancel</button></div>
+    <p class="sub" style="margin-top:4px">Voice notes are disguised. Names are removed before posting.</p>
+    <textarea id="postTxt" placeholder="What's going on?"></textarea>
+    <div id="modmsg" class="mod hidden"></div>
+    <div class="row" style="margin-top:14px"><button class="micbtn" style="width:52px;height:52px;font-size:22px" onclick="toast('🎙️ Recording… (demo)')">🎙️</button><button class="btn pink" style="margin-left:auto" id="postBtn">Post to Echo</button></div>
+  </div>
+</div>
+
+<div class="tip" id="tip"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- data ---------- */
+const COHORTS=[
+  {id:"Winter 2026",st:"past",label:"Completed"},
+  {id:"Summer 2026",st:"past",label:"Completed"},
+  {id:"Fall 2026",st:"active",label:"Active"},
+  {id:"Winter 2027",st:"upcoming",label:"Upcoming"}
+];
+const LOBS={
+  "Technology & Operations":["Applied ML","Data Platforms","Cloud & Infra","Cyber Security"],
+  "Capital Markets":["Quant Research","Trading Tech","Risk Analytics","Sales Tools"],
+  "Wealth Management":["Advisor Tools","Digital Wealth","Client Insights","Portfolio Tech"],
+  "General Bank Management":["Finance Analytics","HR Tech","Strategy","Enterprise Data"],
+  "Personal & Commercial Banking":["Mobile Banking","Lending Tech","Fraud & AML","Customer AI"]
+};
+const LOBSHORT={"Technology & Operations":"T&O","Capital Markets":"Cap Mkts","Wealth Management":"Wealth","General Bank Management":"GBM","Personal & Commercial Banking":"P&CB"};
+const filt={cohort:"Fall 2026",lob:"All"};
+const ESCALATE=25;
+const CHIPS=["All","Mentorship","Onboarding","Team","Career growth","Win"];
+const TCLS={Mentorship:"ment",Win:"win","Career growth":"car",Team:"team"};
+let posts=[
+ {id:1,ava:"🐻",coh:"Fall 2026",lob:"Technology & Operations",ago:"2h",theme:"Onboarding",voice:"0:24",text:"6 weeks in and I still don't really know what my team does or how my work fits in.",echoes:42,replies:12,status:"esc"},
+ {id:2,ava:"🦊",coh:"Fall 2026",lob:"Capital Markets",ago:"5h",theme:"Mentorship",text:"My mentor has cancelled 3 of our 4 check-ins. Is that normal or should I say something?",echoes:28,replies:9,status:"esc"},
+ {id:3,ava:"🐰",coh:"Fall 2026",lob:"Wealth Management",ago:"1d",theme:"Win",text:"Presented to a VP today and she remembered my name after. Small thing but it made my week.",echoes:61,replies:15},
+ {id:4,ava:"🐼",coh:"Fall 2026",lob:"Technology & Operations",ago:"1d",theme:"Career growth",voice:"0:18",text:"Nobody's told me what happens after this term. Do co-ops ever move into research teams?",echoes:19,replies:6},
+ {id:5,ava:"🐱",coh:"Fall 2026",lob:"General Bank Management",ago:"2d",theme:"Team",text:"Office is empty on Fridays and I'm the only intern who comes in. Kind of lonely.",echoes:14,replies:3},
+ {id:6,ava:"🐨",coh:"Fall 2026",lob:"Personal & Commercial Banking",ago:"2d",theme:"Onboarding",text:"Laptop took 9 days to arrive. Spent my first week reading docs on my phone 🙃",echoes:23,replies:7},
+ {id:7,ava:"🦄",coh:"Fall 2026",lob:"Capital Markets",ago:"3d",theme:"Win",voice:"0:12",text:"Got my first PR merged into the pricing library. The senior dev left the nicest review comment.",echoes:33,replies:8},
+ {id:8,ava:"🐧",coh:"Fall 2026",lob:"Wealth Management",ago:"4d",theme:"Career growth",text:"Would love to know if I can rotate to another team next term. Who do I even ask?",echoes:17,replies:4},
+ {id:9,ava:"🦋",coh:"Summer 2026",lob:"Technology & Operations",ago:"Aug 12",theme:"Mentorship",text:"Mentorship pairings happened in week 5. Felt like the first month was wasted.",echoes:38,replies:11,status:"done",reply:"Starting Fall 2026, mentors are matched before your start date."},
+ {id:10,ava:"🐳",coh:"Summer 2026",lob:"General Bank Management",ago:"Jul 30",theme:"Team",text:"Our team lunches made this term. Please keep doing them!",echoes:26,replies:5},
+ {id:11,ava:"🐞",coh:"Winter 2026",lob:"Capital Markets",ago:"Mar 3",theme:"Onboarding",text:"Access requests took 3 weeks. I watched other people code for most of January.",echoes:44,replies:13,status:"done",reply:"Access requests are now filed 2 weeks before your start date."},
+ {id:12,ava:"🐢",coh:"Winter 2026",lob:"Wealth Management",ago:"Feb 18",theme:"Career growth",text:"Return-offer timelines were really unclear. I accepted somewhere else because I couldn't wait.",echoes:31,replies:9,status:"done",reply:"Return-offer decisions now go out by week 12, with a timeline shared in week 1."}
+];
+let ysd=[
+ {coh:"Fall 2026",lob:"Technology & Operations",text:"40+ of you echoed that onboarding felt confusing. Starting in January, every new intern gets a week-1 buddy from the last cohort."}
+];
+posts.filter(p=>p.reply).forEach(p=>ysd.push({coh:p.coh,lob:p.lob,text:`${p.echoes} of you echoed this. ${p.reply}`}));
+let mine=new Set(), ft="top", chip="All";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),3000)}
+function rng(str){let h=1779033703;for(const c of str)h=Math.imul(h^c.charCodeAt(0),3432918353),h=h<<13|h>>>19;return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}}
+const inFilter=p=>p.coh===filt.cohort&&(filt.lob==="All"||p.lob===filt.lob);
+
+/* ---------- filters ---------- */
+function renderFilters(){
+  const html=`<span class="flabel">Cohort</span><div class="cohorts">${COHORTS.map(c=>`<button class="coh ${c.id===filt.cohort?"on":""}" data-coh="${c.id}" title="${c.label}"><span class="dot ${c.st}"></span>${c.id}</button>`).join("")}</div>
+  <span class="fsep"></span><span class="flabel">Line of business</span>
+  <select class="sel" data-lob><option value="All">All lines of business</option>${Object.keys(LOBS).map(l=>`<option ${l===filt.lob?"selected":""}>${l}</option>`).join("")}</select>
+  <span class="fsum">${COHORTS.find(c=>c.id===filt.cohort).label} · ${filt.lob==="All"?"All LOBs":LOBSHORT[filt.lob]}</span>`;
+  $$("[data-filters]").forEach(f=>f.innerHTML=html);
+  $$("[data-coh]").forEach(b=>b.onclick=()=>{filt.cohort=b.dataset.coh;refresh()});
+  $$("[data-lob]").forEach(s=>s.onchange=()=>{filt.lob=s.value;refresh()});
+}
+function refresh(){renderFilters();renderFeed();renderTeam()}
+
+/* ---------- navigation ---------- */
+$$(".views button").forEach(b=>b.onclick=()=>{$$(".views button").forEach(x=>x.classList.toggle("on",x===b));["intern","team","manager"].forEach(v=>$("#v-"+v).classList.toggle("hidden",v!==b.dataset.view));scrollTo(0,0)});
+$("#themeBtn").onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;r.dataset.theme=dark?"light":"dark"};
+$$(".side .nb").forEach(b=>b.onclick=()=>{$$(".side .nb").forEach(x=>x.classList.toggle("on",x===b));["journal","echo","wrapped"].forEach(s=>$("#s-"+s).classList.toggle("hidden",s!==b.dataset.s));scrollTo(0,0)});
+
+/* ---------- journal ---------- */
+let recT=null,recS=0;
+$("#micBtn").onclick=()=>{
+  const m=$("#micBtn");
+  if(!recT){m.classList.add("on");m.textContent="⏹";recS=0;$("#recLabel").textContent="Listening… 0:00";recT=setInterval(()=>{recS++;$("#recLabel").textContent="Listening… 0:"+String(recS).padStart(2,"0")},1000)}
+  else{clearInterval(recT);recT=null;m.classList.remove("on");m.textContent="🎙️";$("#recLabel").textContent="Tap to record";addEntry("Had a really good 1-on-1 with my manager today. We talked about me owning the evaluation pipeline next sprint.","0:"+String(Math.max(recS,4)).padStart(2,"0")+" 🎙️")}
+};
+$("#typeBtn").onclick=()=>{$("#typeBox").classList.toggle("hidden");$("#journalTxt").focus()};
+$("#saveJournal").onclick=()=>{const v=$("#journalTxt").value.trim();if(!v)return;addEntry(esc(v),"typed");$("#journalTxt").value="";$("#typeBox").classList.add("hidden")};
+function addEntry(text,len){const d=document.createElement("div");d.className="card";d.innerHTML=`<div class="row"><span class="eyebrow">New entry</span><span class="sub" style="margin-left:auto">just now · ${len}</span></div><div class="entry">"${text}"</div>`;$("#entries").prepend(d);toast("Saved to your private journal 📓")}
+function talk(m){$("#talk").innerHTML=`<h2 style="font-size:19px;margin:0">✓ ${m}</h2>`}
+
+/* ---------- feed ---------- */
+$("#chips").innerHTML=CHIPS.map(c=>`<button class="chip ${c==="All"?"on":""}" data-c="${c}">${c==="Win"?"Wins":c}</button>`).join("");
+$$("[data-c]").forEach(b=>b.onclick=()=>{chip=b.dataset.c;$$("[data-c]").forEach(x=>x.classList.toggle("on",x===b));renderFeed()});
+$$("[data-ft]").forEach(b=>b.onclick=()=>{ft=b.dataset.ft;$$("[data-ft]").forEach(x=>x.classList.toggle("on",x===b));renderFeed()});
+function waveHTML(id){let h="";for(let i=0;i<40;i++){const v=6+Math.abs(Math.sin(i*1.7+id))*22;h+=`<i style="height:${v}px"></i>`}return h}
+const ysdIn=y=>y.coh===filt.cohort&&(filt.lob==="All"||y.lob===filt.lob);
+function ysdCard(y){return `<div class="card ysd"><div class="t">✓ You said, we did · ${LOBSHORT[y.lob]}</div><p>${esc(y.text)}</p></div>`}
+const AVBG=["var(--blue-soft)","var(--pink-soft)","var(--lav-soft)","var(--mint-soft)","var(--peach-soft)","var(--cream-2)"];
+function renderFeed(){
+  const upcoming=filt.cohort==="Winter 2027";
+  const base=posts.filter(inFilter);
+  // trending + side ysd
+  const counts={};base.forEach(p=>counts[p.theme]=(counts[p.theme]||0)+p.echoes);
+  $("#trendList").innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([t,n])=>`<li><span class="theme ${TCLS[t]||""}" style="margin:0">${t==="Win"?"Wins":t}</span><span class="n">${n}</span></li>`).join("")||'<li class="sub">No echoes yet</li>';
+  const ys=ysd.filter(ysdIn);
+  $("#ysdSide").innerHTML=ys.length?`<div class="t">✅ Latest: You said, we did</div><p>${esc(ys[0].text)}</p>`:`<div class="t">✅ You said, we did</div><p class="sub">No responses for this filter yet.</p>`;
+  if(upcoming){$("#feed").innerHTML=`<div class="card empty"><div class="big">🌱</div><h2>Winter 2027 starts in January</h2><p class="sub">The feed opens on day one of the term.</p></div>`;return}
+  if(ft==="ysd"){$("#feed").innerHTML=ys.map(ysdCard).join("")||'<div class="card empty"><div class="big">📭</div><p class="sub">No responses yet for this cohort and line of business.</p></div>';return}
+  let l=base.filter(p=>chip==="All"||p.theme===chip);
+  if(ft==="top")l=[...l].sort((a,b)=>b.echoes-a.echoes);
+  $("#feed").innerHTML=l.map(p=>`
+  <div class="card post">
+    <div class="ph"><span class="ava" style="background:${AVBG[p.id%6]}">${p.ava}</span><span><span class="lobt">${p.lob}</span><br>${p.coh} · ${p.ago}</span><span class="theme ${TCLS[p.theme]||""}">${p.theme==="Win"?"Win 🎉":p.theme}</span></div>
+    ${p.voice?`<div class="voice"><button class="play" onclick="playV(this)">▶</button><div class="wave">${waveHTML(p.id)}</div><span class="vt">${p.voice}</span></div><div class="vnote">🔒 Voice disguised · transcript below</div>`:""}
+    <p class="ptext">${esc(p.text)}</p>
+    ${p.status==="esc"?`<span class="sent">↗ Sent to the Early Talent team</span>`:p.status==="prog"?`<span class="sent prog">⏳ Early Talent team is on it</span>`:""}
+    ${p.reply?`<div class="reply"><b>Early Talent team:</b> ${esc(p.reply)}</div>`:""}
+    <div class="pfoot"><button class="echo ${mine.has(p.id)?"on":""}" onclick="echoPost(${p.id})"><span class="ei">${mine.has(p.id)?"💗":"ılıl"}</span>Echo · ${p.echoes}</button><span>💬 ${p.replies} replies</span></div>
+  </div>`).join("")||'<div class="card empty"><div class="big">🔎</div><p class="sub">No posts match these filters.</p></div>';
+}
+function playV(b){const bars=[...b.nextElementSibling.children];let i=0;b.textContent="❚❚";const t=setInterval(()=>{if(i<bars.length)bars[i++].classList.add("p");else{clearInterval(t);bars.forEach(x=>x.classList.remove("p"));b.textContent="▶"}},70)}
+function echoPost(id){
+  const p=posts.find(x=>x.id===id);
+  if(mine.has(id)){mine.delete(id);p.echoes--;renderFeed();renderTeam();return}
+  mine.add(id);p.echoes++;
+  if(p.echoes===ESCALATE&&!p.status){p.status="esc";toast(`↗ ${ESCALATE} interns feel this way. Sent to the Early Talent team.`)}
+  else toast(`You and ${p.echoes-1} others feel this way 💗`);
+  renderFeed();renderTeam();
+}
+$("#shareBtn").onclick=()=>{$("#modal").classList.remove("hidden");$("#modmsg").classList.add("hidden");$("#postTxt").focus()};
+$("#closeModal").onclick=()=>$("#modal").classList.add("hidden");
+const KW={Mentorship:/mentor|1-on-1|check-in|guidance/i,Onboarding:/onboard|access|laptop|setup|first week|ticket/i,"Career growth":/career|return offer|future|path|grow|rotate/i,Win:/shipped|proud|win|presented|clapped|launched|merged/i};
+$("#postBtn").onclick=()=>{
+  const v=$("#postTxt").value.trim();if(!v)return toast("Write something first");
+  const m=$("#modmsg");
+  if(/harass|assault|unsafe|threat|discriminat/i.test(v)){m.classList.remove("hidden");m.innerHTML="🛡️ <b>This sounds serious, and it deserves more than a feed post.</b> It hasn't been published. A coordinator can reach out privately, or you can use RBC's confidential reporting options.";return}
+  const s=v.replace(/\b(my (manager|mentor|lead|boss))\s+[A-Z][a-z]+/g,"$1").replace(/@\w+/g,"[name removed]");
+  const theme=Object.keys(KW).find(k=>KW[k].test(s))||"Team";
+  posts.unshift({id:Date.now(),ava:"🌸",coh:"Fall 2026",lob:"Technology & Operations",ago:"now",theme,text:s,echoes:0,replies:0});
+  $("#postTxt").value="";$("#modal").classList.add("hidden");
+  filt.cohort="Fall 2026";ft="new";$$("[data-ft]").forEach(x=>x.classList.toggle("on",x.dataset.ft==="new"));refresh();
+  toast(s!==v?"Posted. We removed a name to keep it anonymous ✂️":"Posted anonymously 💬");
+};
+
+/* ---------- dashboard ---------- */
+const COLS=["Mentorship","Onboarding","Team","Career growth","Workload"];
+const tip=$("#tip");
+function showTip(e,h){tip.innerHTML=h;tip.style.display="block";tip.style.left=Math.min(e.clientX+14,innerWidth-260)+"px";tip.style.top=(e.clientY+14)+"px"}
+function hideTip(){tip.style.display="none"}
+function renderTeam(){
+  const c=COHORTS.find(x=>x.id===filt.cohort), up=c.st==="upcoming", past=c.st==="past";
+  $("#dashEmpty").classList.toggle("hidden",!up);$("#dashBody").classList.toggle("hidden",up);
+  if(up)return;
+  const R=rng(filt.cohort+"|"+filt.lob);
+  const all=filt.lob==="All";
+  const interns=all?140:18+Math.floor(R()*22);
+  const pulse=58+Math.floor(R()*20), dp=Math.floor(R()*9)-3;
+  const risk=Math.max(1,Math.round(interns*(0.04+R()*0.07)));
+  $("#kPulse").textContent=pulse;
+  $("#kPulseD").innerHTML=past?"final score for the term":`<span class="${dp>=0?"up-good":"up-bad"}">${dp>=0?"▲":"▼"} ${Math.abs(dp)}</span> vs last week`;
+  $("#kRisk").innerHTML=(risk<5&&!all?"&lt;5":risk)+` <span style="font-size:15px;font-weight:500;color:var(--ink-2)">of ${interns}</span>`;
+  $("#kRiskD").innerHTML=past?`${Math.round(R()*30+55)}% accepted return offers`:`<span class="up-bad">▲ ${1+Math.floor(R()*3)}</span> this week · ${Math.round(risk/interns*100)}%`;
+  $("#kPart").textContent=(62+Math.floor(R()*24))+"%";
+  const open=posts.filter(p=>inFilter(p)&&p.status==="esc").length;
+  $("#kOpen").textContent=open;$("#kOpenD").textContent=past?"all issues closed":`avg response time ${(1.5+R()*2).toFixed(1)} days`;
+
+  // heatmap: rows = LOBs (all) or teams within LOB
+  const rows=all?Object.keys(LOBS):LOBS[filt.lob];
+  $("#heatTitle").textContent=all?"Where to act: theme × line of business":`Where to act: theme × team in ${LOBSHORT[filt.lob]}`;
+  const vals=rows.map(()=>COLS.map(()=>Math.floor(R()*(all?32:14))+1));
+  const hot=Math.floor(R()*rows.length), hotc=Math.floor(R()*COLS.length);vals[hot][hotc]=all?36:18;
+  const max=Math.max(...vals.flat());
+  let h=`<div class="hm" style="grid-template-columns:${all?"170px":"130px"} repeat(${COLS.length},1fr)"><div></div>${COLS.map(x=>`<div class="ch">${x}</div>`).join("")}`;
+  rows.forEach((t,r)=>{h+=`<div class="rh">${t}</div>`;vals[r].forEach((v,ci)=>{const k=Math.min(7,1+Math.floor(v/max*6.99));h+=`<div class="c" data-t="${t}" data-th="${COLS[ci]}" data-v="${v}" style="background:var(--seq-${k});color:${k>=5?"#fff":"var(--ink)"}">${v}</div>`})});
+  $("#heat").innerHTML=h+"</div>";
+  $$("#heat .c").forEach(el=>{el.onmousemove=e=>showTip(e,`<b>${el.dataset.t} × ${el.dataset.th}</b><br>${el.dataset.v} negative posts + echoes`);el.onmouseleave=hideTip});
+
+  // risk line
+  const n=16, nowW=past?16:10, scale=risk/11;
+  const shape=[2,3,3,4,6,10,8,7,8,11,13,15,14,12,9,6];
+  const series=shape.map(v=>Math.max(0,Math.round(v*scale*(0.85+R()*0.3))));
+  series[nowW-1]=past?series[15]:risk;
+  const ymax=Math.max(4,Math.ceil(Math.max(...series)/4)*4);
+  const W=560,H=220,pl=30,pr=12,pt=16,pb=26;
+  const x=i=>pl+i*(W-pl-pr)/(n-1),y=v=>pt+(ymax-v)*(H-pt-pb)/ymax;
+  let g=`<rect x="${x(4.5)}" y="${pt}" width="${x(6.5)-x(4.5)}" height="${H-pt-pb}" rx="8" fill="var(--pink-soft)"/><rect x="${x(10.5)}" y="${pt}" width="${x(13.5)-x(10.5)}" height="${H-pt-pb}" rx="8" fill="var(--pink-soft)"/>`;
+  for(let k=0;k<=4;k++){const v=ymax*k/4;g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="${k?"var(--grid)":"var(--axis)"}"/><text x="${pl-6}" y="${y(v)+4}" text-anchor="end">${v}</text>`}
+  g+=`<text x="${x(5.5)}" y="${pt+14}" text-anchor="middle">midterms</text><text x="${x(12)}" y="${pt+14}" text-anchor="middle">return offers</text>`;
+  for(let i=0;i<n;i+=2)g+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle">W${i+1}</text>`;
+  const act=series.slice(0,nowW), proj=past?[]:series.slice(nowW-1);
+  const line=(arr,off)=>arr.map((v,i)=>(i?"L":"M")+x(i+off)+","+y(v)).join("");
+  g+=`<defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--navy-2)" stop-opacity=".25"/><stop offset="1" stop-color="var(--navy-2)" stop-opacity="0"/></linearGradient></defs>`;
+  g+=`<path d="${line(act,0)}L${x(nowW-1)},${y(0)}L${x(0)},${y(0)}Z" fill="url(#ga)"/>`;
+  if(proj.length)g+=`<path d="${line(proj,nowW-1)}" fill="none" stroke="var(--navy-2)" stroke-width="2" stroke-dasharray="4 4" opacity=".6"/><text x="${x(14)}" y="${y(proj[5]||0)-10}" text-anchor="middle">projected</text>`;
+  g+=`<path d="${line(act,0)}" fill="none" stroke="var(--navy-2)" stroke-width="2"/>`;
+  g+=`<circle cx="${x(nowW-1)}" cy="${y(act[nowW-1])}" r="5" fill="var(--pink)" stroke="var(--surface)" stroke-width="2"/><text x="${x(nowW-1)+(past?-8:8)}" y="${y(act[nowW-1])-9}" text-anchor="${past?"end":"start"}" style="fill:var(--ink);font-weight:700">${act[nowW-1]} ${past?"at end":"now"}</text>`;
+  g+=`<line id="xh" y1="${pt}" y2="${H-pb}" stroke="var(--axis)" visibility="hidden"/><rect id="hit" x="${pl}" y="${pt}" width="${W-pl-pr}" height="${H-pt-pb}" fill="transparent"/>`;
+  $("#riskChart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Interns showing leaving signals by week">${g}</svg>`;
+  const svg=$("#riskChart svg"),xh=$("#xh");
+  $("#hit").onmousemove=e=>{const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*W/r.width;const i=Math.max(0,Math.min(n-1,Math.round((sx-pl)/((W-pl-pr)/(n-1)))));xh.setAttribute("x1",x(i));xh.setAttribute("x2",x(i));xh.setAttribute("visibility","visible");showTip(e,`<b>Week ${i+1}</b><br>${series[i]} interns ${i<nowW?"showing signals":"(projected)"}`)};
+  $("#hit").onmouseleave=()=>{xh.setAttribute("visibility","hidden");hideTip()};
+
+  // top list
+  const top=posts.filter(inFilter).sort((a,b)=>b.echoes-a.echoes).slice(0,5);
+  $("#topList").innerHTML=top.map(p=>{const a=p.status==="esc"?`<button class="btn small pink" onclick="respond(${p.id})">Respond</button>`:p.status==="prog"?`<span class="status st-prog">In progress</span>`:p.status==="done"?`<span class="status st-done">✓ Done</span>`:p.theme==="Win"?`<span class="status st-done">Keep doing 💚</span>`:"";return `<li><span class="num">${p.echoes}</span><span style="flex:1"><span class="theme ${TCLS[p.theme]||""}" style="margin:0 6px 0 0">${p.theme}</span>${esc(p.text.slice(0,60))}…</span>${a}</li>`}).join("")||'<li class="sub">No posts for this filter.</li>';
+
+  // before/after
+  const b=14+Math.floor(R()*12), af=Math.round(b*(0.45+R()*0.2));
+  $("#baB").textContent=b;$("#baA").textContent=af;
+  $("#baBb").style.height=(b/26*90)+"%";$("#baAb").style.height=(af/26*90)+"%";
+  $("#baNote").innerHTML=`<span class="up-good">▼ ${Math.round((1-af/b)*100)}%</span> fewer onboarding posts · leaving signals tied to onboarding also fell`;
+}
+function respond(id){
+  const p=posts.find(x=>x.id===id);
+  p.status="prog";
+  p.reply=p.theme==="Mentorship"?"Every intern now gets a backup mentor, and missed check-ins are flagged to the program team.":p.theme==="Onboarding"?"Laptops and access are now ready before day one. Each team also runs a 30-minute \"how your work fits\" session for new interns.":"We're running a career paths panel with AI Group alumni on Dec 3.";
+  ysd.unshift({coh:p.coh,lob:p.lob,text:`${p.echoes} of you echoed this. ${p.reply}`});
+  refresh();toast("Response posted to “You said, we did” ✓");
+}
+refresh();
+</script>
+</body>
+</html>
